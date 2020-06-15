@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>恒天分享测试222222222</title>
+</head>
+<body>  
+    <h1>恒天分享测试2222222222222</h1>
+	<button id="ddd">测试</button>
+        <script src="http://www.jq22.com/jquery/jquery-1.7.1.js"></script>
+        <script src="https://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+        <script>
+		$(function(){
+		   $("ddd").click(function(){
+			  wx_share();
+			});
+		})
+                var wxParam = {};
+            var wx_share = function(param, url) {
+            debugger
+                $.ajax({
+                    url:  "http://localhost:8080/core/share?url=" + encodeURIComponent(location.href.split("#")[0]),
+                    type: "GET",
+                    data: url,
+                    success: function(data) {
+                        console.log(data);
+                        console.log(data.timestamp,'55555555555555555555')
+                        // if (data.code == 0) {
+                            wxParam = param;
+                            console.log('data.code == 0')
+                            // 分享配置
+                            wx.config({
+                                debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                                appId: 'wx2cfa3ca1ea2336ed', // 必填，企业号的唯一标识
+                                timestamp: data.timestamp, // 必填，生成签名的时间戳
+                                nonceStr: data.noncestr, // 必填，生成签名的随机串
+                                signature: data.signature,// 必填，签名，见附录1
+                                jsApiList: ['onMenuShareTimeline','onMenuShareAppMessage','onMenuShareQQ','onMenuShareWeibo','onMenuShareQZone'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                            });
+                        // }
+                    },  
+                    error : function(error) {
+                        console.log('请求错误')
+                    }
+                })
+            }
+            
+            wx_share({
+                title: document.title,
+                desc: "恒天分享测试" ,
+                link: window.location.href,
+                imgUrl: "http://pic17.nipic.com/20111021/8633866_210108284151_2.jpg",
+                type: "分享类型,music、video或link，不填默认为link",
+                dataUrl: "如果type是music或video，则要提供数据链接，默认为空",
+                successFn: function(){
+                    // 用户确认分享后执行的回调函数
+                    console.log('确认分析')
+                },
+                cancelFn: function(){
+                    // 用户取消分享后执行的回调函数
+                    console.log('取消分享')
+                }
+            },window.location.href);
+           
+            wx.ready(function () {
+                //分享到朋友圈
+                wx.onMenuShareTimeline({
+                    title: wxParam.title,
+                    link: wxParam.link,
+                    imgUrl: wxParam.imgUrl,
+                    success: function () {
+                        if (wxParam.successFn) {wxParam.successFn();}
+                    }, cancel: function () {
+                        if (wxParam.cancelFn) {wxParam.cancelFn();}
+                    }
+                });
+                
+                //分享给朋友
+                wx.onMenuShareAppMessage({
+                    title: wxParam.title,
+                    desc: wxParam.desc,
+                    link: wxParam.link,
+                    imgUrl: wxParam.imgUrl,
+                    type: wxParam.type,
+                    dataUrl: wxParam.dataUrl,
+                    success: function () {
+                        console.log('分享给朋友')
+                        if (wxParam.successFn) {wxParam.successFn();}
+                    }, cancel: function () {
+                        if (wxParam.cancelFn) {wxParam.cancelFn();}
+                    }
+                });
+                
+                //分享到QQ
+                wx.onMenuShareQQ({
+                    title: wxParam.title,
+                    desc: wxParam.desc,
+                    link: wxParam.link,
+                    imgUrl: wxParam.imgUrl,
+                    success: function () {
+                        if (wxParam.successFn) {wxParam.successFn();}
+                    }, cancel: function () {
+                        if (wxParam.cancelFn) {wxParam.cancelFn();}
+                    }
+                });
+                
+                //分享到腾讯微博
+                wx.onMenuShareWeibo({
+                    title: wxParam.title,
+                    desc: wxParam.desc,
+                    link: wxParam.link,
+                    imgUrl: wxParam.imgUrl,
+                    success: function () {
+                        if (wxParam.successFn) {wxParam.successFn();}
+                    }, cancel: function () {
+                        if (wxParam.cancelFn) {wxParam.cancelFn();}
+                    }
+                });
+                
+                //分享到QQ空间
+                wx.onMenuShareQZone({
+                    title: wxParam.title,
+                    desc: wxParam.desc,
+                    link: wxParam.link,
+                    imgUrl: wxParam.imgUrl,
+                    success: function () {
+                        if (wxParam.successFn) {wxParam.successFn();}
+                    }, cancel: function () {
+                        if (wxParam.cancelFn) {wxParam.cancelFn();}
+                    }
+                });
+            })
+        </script>
+</body>
+</html>
